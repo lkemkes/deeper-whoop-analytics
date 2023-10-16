@@ -6,10 +6,16 @@ st.set_page_config(layout="wide")
 st.title("📈 Deeper WHOOP Analytics")
 st.caption("Go beyond the basic analytics in the WHOOP app.")
 
-st.write("## Get your data export from WHOOP")
+st.write("## 1) Get your data export from WHOOP")
 st.write("Here's how:")
+st.write("1. Go to the WHOOP app")
+st.write("2. Go to the 'More' tab")
+st.write("3. Click on 'App Settings'")
+st.write("4. Click on 'Data Export'")
+st.write("5. Click on 'Create Export'")
+st.write("Within a few minutes, you will receive an email with a zip file. Unpack the file and upload 2 of the csv files below.")
 
-st.write("## First step: Upload your WHOOP export")
+st.write("## 2) Upload your WHOOP export")
 sleeps_file = st.file_uploader("Choose your sleeps.csv file")
 physiological_cycles_file = st.file_uploader("Choose your physiological_cycles.csv file")
 
