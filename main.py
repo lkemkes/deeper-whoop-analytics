@@ -7,12 +7,17 @@ st.title("📈 Deeper WHOOP Analytics")
 st.caption("Go beyond the basic analytics in the WHOOP app.")
 
 st.write("## 1) Get your data export from WHOOP")
-st.write("Here's how:")
-st.write("1. Go to the WHOOP app")
-st.write("2. Go to the 'More' tab")
-st.write("3. Click on 'App Settings'")
-st.write("4. Click on 'Data Export'")
-st.write("5. Click on 'Create Export'")
+col1, col2, col3 = st.columns(3)
+with col1:
+    st.write("1a) Go to the 'More' tab & click on 'App Settings'")
+    st.image("screenshots/IMG_3300.jpg")
+with col2:
+    st.write("1b) Click on 'Data Export'")
+    st.image("screenshots/IMG_3301.jpg")
+with col3:
+    st.write("1c) Click on 'Create Export'")
+    st.image("screenshots/IMG_3302.PNG")
+
 st.write("Within a few minutes, you will receive an email with a zip file. Unpack the file and upload 2 of the csv files below.")
 
 st.write("## 2) Upload your WHOOP export")
@@ -146,6 +151,27 @@ if sleeps_file is not None and physiological_cycles_file is not None:
     annual_overview = build_annual_overview(df)
     st.write(annual_overview.transpose())
 
+
+    col1, col2, col3, col4 = st.columns(4)
+    annual_overview.reset_index(inplace=True)
+    annual_overview["Year"] = annual_overview["Year"].astype(int)
+    with col1:
+        st.write("### Avg. Sleep Duration")
+        st.bar_chart(df.groupby("Year")["Asleep duration (min)"].mean().reset_index(), x="Year",
+                     y="Asleep duration (min)")
+    with col2:
+        st.write("### Avg. Sleep Consistency")
+        st.bar_chart(df.groupby("Year")["Sleep consistency %"].mean().reset_index(), x="Year",
+                     y="Sleep consistency %")
+    with col3:
+        st.write("### Avg. HRV")
+        st.bar_chart(df.groupby("Year")["Heart rate variability (ms)"].mean().reset_index(), x="Year",
+                     y="Heart rate variability (ms)")
+    with col4:
+        st.write("### Avg. RHR")
+        st.bar_chart(df.groupby("Year")["Resting heart rate (bpm)"].mean().reset_index(), x="Year",
+                     y="Resting heart rate (bpm)")
+
     st.write("## Last 30 Days")
     st.bar_chart(df.head(30), x="date_dt", y="Asleep duration (min)")
     st.line_chart(df.head(30), x="date_dt", y="Skin temp (celsius)")
@@ -172,3 +198,20 @@ if sleeps_file is not None and physiological_cycles_file is not None:
     st.write("### Skin Temperature by Month")
     avg_temperature_by_month = df.groupby("year_month")["Skin temp (celsius)"].mean().reset_index()
     st.line_chart(avg_temperature_by_month, x="year_month", y="Skin temp (celsius)")
+
+    st.write("## Share of Good, Bad, and Okay Nights")
+    night_counts_by_score = df.groupby("year_month")["Night Score"].value_counts().unstack()
+    night_counts_by_score.fillna(0, inplace=True)
+    night_counts_by_score["Total"] = night_counts_by_score.sum(axis=1)
+    for ix, score in enumerate(["Good", "Okay", "Bad"]):
+        night_counts_by_score["{}) Share of {} Nights".format(ix+1, score)] = night_counts_by_score[score] / night_counts_by_score["Total"]
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.write("### Good Nights (7+ hours)")
+        st.bar_chart(night_counts_by_score.reset_index(), x="year_month", y="1) Share of Good Nights")
+    with col2:
+        st.write("### Okay Nights (6-7h hours)")
+        st.bar_chart(night_counts_by_score.reset_index(), x="year_month", y="2) Share of Okay Nights")
+    with col3:
+        st.write("### Bad Nights (<6 hours)")
+        st.bar_chart(night_counts_by_score.reset_index(), x="year_month", y="3) Share of Bad Nights")
