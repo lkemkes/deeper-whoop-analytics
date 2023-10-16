@@ -9,7 +9,7 @@ st.caption("Go beyond the basic analytics in the WHOOP app.")
 st.write("## Get your data export from WHOOP")
 st.write("Here's how:")
 
-st.write("## Upload your WHOOP export")
+st.write("## First step: Upload your WHOOP export")
 sleeps_file = st.file_uploader("Choose your sleeps.csv file")
 physiological_cycles_file = st.file_uploader("Choose your physiological_cycles.csv file")
 
@@ -140,11 +140,6 @@ if sleeps_file is not None and physiological_cycles_file is not None:
     annual_overview = build_annual_overview(df)
     st.write(annual_overview.transpose())
 
-    st.write("### Good, Bad, and Okay Nights by Year")
-    night_score_annual_counts = df.groupby("Year")["Night Score"].value_counts().unstack().reset_index()
-    st.write(night_score_annual_counts)
-    st.bar_chart(night_score_annual_counts, x="Year", y=["Good", "Okay", "Bad"])
-
     st.write("## Last 30 Days")
     st.bar_chart(df.head(30), x="date_dt", y="Asleep duration (min)")
     st.line_chart(df.head(30), x="date_dt", y="Skin temp (celsius)")
@@ -169,20 +164,5 @@ if sleeps_file is not None and physiological_cycles_file is not None:
     avg_rhr_by_month = df.groupby("year_month")["Resting heart rate (bpm)"].mean().reset_index()
     st.line_chart(avg_rhr_by_month, x="year_month", y="Resting heart rate (bpm)")
     st.write("### Skin Temperature by Month")
-    st.bar_chart(monthly_overview.reset_index(), x="Month", y="Avg. Skin temp (celsius)")
-
-    st.write("## Deep Dive: Good, Bad, and Okay Nights")
-
-    """ 
-    # Set default value for slider to the first and last dates in the result
-        start_time = st.sidebar.slider(
-            "Date picker",
-            min_value=min_date,
-            max_value=max_date,
-            value=[min_date, max_date],
-            format="YYYY-MM-DD",
-        )
-        st.write(start_time)
-        filtered_data = df.loc[df["date_dt"] >= start_time[0] & df["date_dt"] <= start_time[1]]
-        st.write(filtered_data)
-    """
+    avg_temperature_by_month = df.groupby("year_month")["Skin temp (celsius)"].mean().reset_index()
+    st.line_chart(avg_temperature_by_month, x="year_month", y="Skin temp (celsius)")
