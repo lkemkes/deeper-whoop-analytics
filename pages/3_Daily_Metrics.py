@@ -18,7 +18,8 @@ if "df" in st.session_state:
         (st.session_state.df["Date"] >= days_slider[0]) & (st.session_state.df["Date"] <= days_slider[1])]
 
     st.write("### Sleep Duration")
-    st.bar_chart(df_daily, x="date_dt", y="Asleep duration (min)")
+    df_daily["Asleep duration (h)"] = df_daily["Asleep duration (min)"] / 60
+    st.bar_chart(df_daily, x="date_dt", y="Asleep duration (h)")
 
     st.write("### Sleep Consistency")
     st.bar_chart(df_daily, x="date_dt", y="Sleep consistency %")

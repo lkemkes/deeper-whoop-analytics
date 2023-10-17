@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import datetime as dt
+import altair as alt
 
 
 def build_annual_overview(df: pd.DataFrame) -> pd.DataFrame:
@@ -34,8 +35,10 @@ if "df" in st.session_state:
     annual_overview["Year"] = annual_overview["Year"].astype(int)
     with col1:
         st.write("### Avg. Sleep Duration")
-        st.bar_chart(st.session_state.df.groupby("Year")["Asleep duration (min)"].mean().reset_index(), x="Year",
-                     y="Asleep duration (min)")
+        avg_sleep = st.session_state.df.groupby("Year")["Asleep duration (min)"].mean().reset_index()
+        avg_sleep["Asleep duration (h)"] = avg_sleep["Asleep duration (min)"] / 60
+        st.bar_chart(avg_sleep, x="Year",
+                     y="Asleep duration (h)")
     with col2:
         st.write("### Avg. Sleep Consistency")
         st.bar_chart(st.session_state.df.groupby("Year")["Sleep consistency %"].mean().reset_index(), x="Year",

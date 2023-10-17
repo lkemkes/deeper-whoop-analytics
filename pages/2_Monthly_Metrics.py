@@ -48,9 +48,8 @@ if "df" in st.session_state:
     st.write("### Sleep Duration by Month")
     avg_sleep_by_month = df_monthly[
         "Asleep duration (min)"].mean().reset_index()
-    avg_sleep_by_month["Asleep duration (h)"] = avg_sleep_by_month["Asleep duration (min)"].apply(
-        lambda x: dt.time(hour=int(x // 60), minute=int(x % 60)))
-    st.bar_chart(avg_sleep_by_month, x="year_month", y="Asleep duration (min)")
+    avg_sleep_by_month["Asleep duration (h)"] = avg_sleep_by_month["Asleep duration (min)"] / 60
+    st.bar_chart(avg_sleep_by_month, x="year_month", y="Asleep duration (h)")
     st.write("### Sleep Consistency by Month")
     avg_sleep_consistency_by_month = df_monthly[
         "Sleep consistency %"].mean().reset_index()

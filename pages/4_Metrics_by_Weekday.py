@@ -42,8 +42,9 @@ if "df" in st.session_state:
     with col1:
         st.write("### Avg. Sleep Duration")
         avg_sleep_by_weekday = df_by_weekday["Asleep duration (min)"].mean().reset_index()
+        avg_sleep_by_weekday["Asleep duration (h)"] = avg_sleep_by_weekday["Asleep duration (min)"] / 60
         avg_sleep_by_weekday["Weekday"] = avg_sleep_by_weekday["Day of Week"].apply(lambda x: WEEKDAY_TO_WEEKDAY_NUM_AND_NAME[x])
-        st.bar_chart(avg_sleep_by_weekday, x="Weekday", y="Asleep duration (min)")
+        st.bar_chart(avg_sleep_by_weekday, x="Weekday", y="Asleep duration (h)")
 
     with col2:
         st.write("### Avg. Sleep Consistency")
